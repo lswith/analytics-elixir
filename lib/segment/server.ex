@@ -7,10 +7,11 @@ defmodule Segment.Server do
   """
 
   use GenServer
-  alias Segment.Http
   alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
 
   require Logger
+
+  @adapter Application.get_env(:segment, :http_adapter) || Segment.HTTP.HTTPoison
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, [name: __MODULE__])
@@ -71,37 +72,37 @@ defmodule Segment.Server do
   end
 
   def handle_cast(%Track{} = t, state) do
-    resp = Http.post!(t.method, Poison.encode!(t), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(t.method, Poison.encode!(t), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Identify{} = i, state) do
-    resp = Http.post!(i.method, Poison.encode!(i), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(i.method, Poison.encode!(i), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Screen{} = s, state) do
-    resp = Http.post!(s.method, Poison.encode!(s), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(s.method, Poison.encode!(s), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Alias{} = a, state) do
-    resp = Http.post!(a.method, Poison.encode!(a), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(a.method, Poison.encode!(a), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Group{} = g, state) do
-    resp = Http.post!(g.method, Poison.encode!(g), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(g.method, Poison.encode!(g), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end
 
   def handle_cast(%Page{} = p, state) do
-    resp = Http.post!(p.method, Poison.encode!(p), [ ssl: [{:versions, [:'tlsv1.2']}] ])
+    resp = @adapter.post!(p.method, Poison.encode!(p), [ ssl: [{:versions, [:'tlsv1.2']}] ])
     Logger.debug fn -> "#{inspect resp}" end
     {:noreply, state}
   end

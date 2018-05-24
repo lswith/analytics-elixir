@@ -3,9 +3,9 @@ defmodule Segment do
   Provides the api for sending data to Segment.io.
   """
 
-  alias Segment.{Track, Identify, Screen, Alias, Group, Page, Context}
+  alias Segment.{Context, Server}
 
-  @module Application.get_env(:segment, :api) || Segment.Server
+  @module Application.get_env(:segment, :api) || Server
 
   defdelegate send_track(t), to: @module
   defdelegate send_track(user_id, event, properties \\ %{}, context \\ Context.new()), to: @module
